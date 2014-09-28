@@ -6,7 +6,7 @@ Item {
     property real centerWidth: width / 2;
     property real centerHeight: height / 2;
     property real border: 1;
-    property real angleOffset: -Math.PI / 2;
+    property real angleOffset: 0;
     property real angle: 360;
 
     onColorChanged: canvas.requestPaint()
@@ -20,6 +20,7 @@ Item {
 
 		property real radius: (Math.min(width, height) / 2) - Math.floor(circle.border * 0.5);
 	    property real angle: (circle.angle / 360) * 2 * Math.PI;
+		property real angleOffset: (circle.angleOffset / 360) * 2 * Math.PI - Math.PI / 2;
 
 		onPaint: {
 			var ctx = getContext('2d');
@@ -34,8 +35,8 @@ Item {
 			ctx.arc(circle.centerWidth,
 					circle.centerHeight,
 					radius,
-					circle.angleOffset,
-					circle.angleOffset + angle);
+					angleOffset,
+					angleOffset + angle);
 			ctx.stroke();
 
 			ctx.restore();
