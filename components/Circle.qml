@@ -11,6 +11,7 @@ Item {
 
     onColorChanged: canvas.requestPaint()
 	onAngleChanged: canvas.requestPaint()
+	onAngleOffsetChanged: canvas.requestPaint()
 	onBorderChanged: canvas.requestPaint()
 
 	Canvas {
