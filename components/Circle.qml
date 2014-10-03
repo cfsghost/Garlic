@@ -92,4 +92,8 @@ Item {
 
 			return true;
 	}
+
+	Component.onCompleted: {
+		canvas.requestPaint();
+	}
 }
