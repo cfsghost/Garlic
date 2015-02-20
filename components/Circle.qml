@@ -28,7 +28,7 @@ Item {
 		anchors.fill: parent;
 		antialiasing: true;
 		renderStrategy: Canvas.Threaded;
-		renderTarget: Canvas.FramebufferObject;
+//		renderTarget: Canvas.FramebufferObject;
 
 		property real radius: Math.min(width, height) / 2;
 		property real angleMargins: (circle.mark > 1) ? (circle.angleMargins / 360) * doublePI : 0;
