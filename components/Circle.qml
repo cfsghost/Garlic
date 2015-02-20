@@ -10,6 +10,14 @@ Item {
     property real angle: 360;
     property real doublePI: 2 * Math.PI;
 
+	property int mark: 1;
+	property real unitAngle: angle / mark;
+	property real angleMarginFactor: 1;
+	property real angleMargins: (unitAngle * angleMarginFactor) / mark;
+
+	onMarkChanged: canvas.requestPaint()
+	onAngleMarginFactorChanged: canvas.requestPaint()
+
     onColorChanged: canvas.requestPaint()
 	onAngleChanged: canvas.requestPaint()
 	onAngleOffsetChanged: canvas.requestPaint()
@@ -19,12 +27,16 @@ Item {
 		id: canvas;
 		anchors.fill: parent;
 		antialiasing: true;
+		renderStrategy: Canvas.Threaded;
+		renderTarget: Canvas.FramebufferObject;
 
 		property real radius: Math.min(width, height) / 2;
+		property real angleMargins: (circle.mark > 1) ? (circle.angleMargins / 360) * doublePI : 0;
+		property real unitAngle: (circle.unitAngle / 360) * doublePI;
 	    property real angle: (circle.angle / 360) * doublePI;
 		property real angleOffset: (circle.angleOffset / 360) * doublePI - Math.PI / 2;
-		property real cx: centerWidth + Math.cos(angle + angleOffset) * (radius - border);
-		property real cy: centerHeight + Math.sin(angle + angleOffset) * (radius - border);
+//		property real cx: centerWidth + Math.cos(angle + angleOffset) * (radius - border);
+//		property real cy: centerHeight + Math.sin(angle + angleOffset) * (radius - border);
 		property real startX: centerWidth + Math.cos(angleOffset) * radius;
 		property real startY: centerHeight + Math.sin(angleOffset) * radius;
 
@@ -35,16 +47,20 @@ Item {
 			ctx.clearRect(0, 0, circle.width, circle.height);
 
 			// Drawing circle
-			ctx.beginPath();
 			ctx.fillStyle = circle.color;
-			ctx.arc(circle.centerWidth,
-					circle.centerHeight,
-					radius,
-					angleOffset,
-					angleOffset + angle);
-			ctx.lineTo(centerWidth, centerHeight);
-			ctx.closePath();
-			ctx.fill();
+
+			for (var index = 0; index < mark; index++) {
+				var offset = angleOffset + index * unitAngle;
+				ctx.beginPath();
+				ctx.arc(circle.centerWidth,
+						circle.centerHeight,
+						radius,
+						offset,
+						offset + unitAngle - angleMargins);
+				ctx.lineTo(centerWidth, centerHeight);
+				ctx.closePath();
+				ctx.fill();
+			}
 
 			// Remove inner circle
 			ctx.globalCompositeOperation = 'destination-out';
@@ -57,7 +73,6 @@ Item {
 			ctx.fill();
 
 			ctx.restore();
-
 		}
 	}
 
