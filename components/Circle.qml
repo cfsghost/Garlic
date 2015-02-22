@@ -1,4 +1,5 @@
 import QtQuick 2.3
+import QtGraphicalEffects 1.0
 
 Item {
 	id: circle;
@@ -15,6 +16,8 @@ Item {
 	property real angleMarginFactor: 1;
 	property real angleMargins: (unitAngle * angleMarginFactor) / mark;
 
+	property bool useGradient: false;
+
 	onMarkChanged: canvas.requestPaint()
 	onAngleMarginFactorChanged: canvas.requestPaint()
 
@@ -27,6 +30,7 @@ Item {
 		id: canvas;
 		anchors.fill: parent;
 		antialiasing: true;
+		visible: !useGradient;
 		renderStrategy: Canvas.Threaded;
 //		renderTarget: Canvas.FramebufferObject;
 
@@ -73,6 +77,30 @@ Item {
 			ctx.fill();
 
 			ctx.restore();
+		}
+	}
+
+	OpacityMask {
+		anchors.fill: canvas;
+		source: canvas;
+		maskSource: gradientMask
+		cached: true;
+		visible: useGradient;
+	}
+
+	Item {
+		id: gradientMask
+
+		anchors.fill: parent;
+		visible: false;
+
+		RadialGradient {
+			anchors.fill: parent;
+			cached: true;
+			gradient: Gradient {
+				GradientStop { position: 0.48; color: '#00ffffff' }
+				GradientStop { position: 0.53; color: '#ffffffff' }
+			}
 		}
 	}
 
