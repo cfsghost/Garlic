@@ -11,6 +11,8 @@ Item {
 	property int availableEdges: edge;
     property real doublePI: 2 * Math.PI;
 
+	onWidthChanged: canvas.requestPaint()
+	onHeightChanged: canvas.requestPaint()
     onColorChanged: canvas.requestPaint()
 	onBorderChanged: canvas.requestPaint()
 	onEdgeChanged: canvas.requestPaint()
