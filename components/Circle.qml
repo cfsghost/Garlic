@@ -67,14 +67,16 @@ Item {
 			}
 
 			// Remove inner circle
-			ctx.globalCompositeOperation = 'destination-out';
-			ctx.beginPath();
-			ctx.arc(circle.centerWidth,
-					circle.centerHeight,
-					radius - circle.border,
-					0,
-					2 * Math.PI);
-			ctx.fill();
+			if (circle.border < radius) {
+				ctx.globalCompositeOperation = 'destination-out';
+				ctx.beginPath();
+				ctx.arc(circle.centerWidth,
+						circle.centerHeight,
+						radius - circle.border,
+						0,
+						2 * Math.PI);
+				ctx.fill();
+			}
 
 			ctx.restore();
 		}
